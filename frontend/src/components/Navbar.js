@@ -52,7 +52,11 @@ const Navbar = () => {
         {(user || admin) ? (
           <>
             <li style={{ color: "#ffd166", fontWeight: 600 }}>
-              {user ? `Hi, ${user.name}` : `Admin: ${admin.username}`}
+              {user ? (
+                <Link to="/profile" style={{ color: "var(--primary)" }}>Dashboard ({user.name})</Link>
+              ) : (
+                `Admin: ${admin.username}`
+              )}
             </li>
             <li>
               <button onClick={handleLogout} style={styles.logoutBtn}>

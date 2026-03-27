@@ -9,6 +9,8 @@ import connectDB from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
+import rentalRoutes from "./routes/rentalRoutes.js";
+import reviewRoutes from "./routes/reviewRoutes.js";
 
 dotenv.config();
 
@@ -31,6 +33,8 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/rentals", rentalRoutes);
+app.use("/api/reviews", reviewRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5000;

@@ -98,20 +98,23 @@ const ProductList = () => {
 
   return (
     <div className="product-list-container">
-      <h2>Available Products</h2>
+      <div className="product-list-header">
+        <h2>Available Products</h2>
+        <p>Find what you need or list what you have.</p>
+      </div>
 
       {/* Filter controls */}
       <div className="filters">
         <input
           type="text"
-          placeholder="Search by name..."
+          placeholder="Search items by name..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
 
         <input
           type="text"
-          placeholder="Search by place..."
+          placeholder="Filter by location..."
           value={placeSearch}
           onChange={(e) => setPlaceSearch(e.target.value)}
         />
@@ -132,11 +135,16 @@ const ProductList = () => {
       {/* Product Grid */}
       <div className="product-grid">
         {filteredProducts.length === 0 ? (
-          <p>No products found.</p>
+          <p style={{ gridColumn: "1 / -1", textAlign: "center", color: "var(--text-muted)" }}>
+            No products found matching your search.
+          </p>
         ) : (
           filteredProducts.map((prod) => (
             <div className="product-card" key={prod._id}>
+
               <div className="image-container">
+                <span className="category-badge">{prod.category}</span>
+                <span className="place-badge">📍 {prod.place}</span>
                 {prod.image ? (
                   <img
                     src={`http://localhost:5000/uploads/${prod.image}`}
@@ -144,53 +152,64 @@ const ProductList = () => {
                     className="product-image"
                   />
                 ) : (
-                  <div className="no-image">No Image</div>
+                  <div className="no-image">No Image Provided</div>
                 )}
               </div>
 
-              <div className="detail-row">
-                <span className="badge">{prod.category}</span>
-                <span className="badge" style={{ background: "var(--surface-hover)", color: "var(--text-muted)", border: "none" }}>📍 {prod.place}</span>
-              </div>
+              <div className="card-content">
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                  <h3>{prod.name}</h3>
+                  {prod.reviewCount > 0 && (
+                    <div style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "0.9rem", color: "#f59e0b", fontWeight: "700", background: "#fffbeb", padding: "2px 8px", borderRadius: "12px" }}>
+                      ★ {prod.rating.toFixed(1)} <span style={{ color: "var(--text-muted)", fontSize: "0.8rem", fontWeight: "500" }}>({prod.reviewCount})</span>
+                    </div>
+                  )}
+                </div>
 
-              <h3>{prod.name}</h3>
-              <div className="price-tag">₹{prod.price} <span style={{ fontSize: "1rem", color: "var(--text-muted)", fontWeight: "normal" }}>/ day</span></div>
-              <div className="deposit-tag">Deposit: ₹{prod.deposit}</div>
+                <div className="price-container">
+                  <span className="price-tag">₹{prod.price}</span>
+                  <span className="price-sub">/ day</span>
+                </div>
 
-              <p className="desc-text">{prod.description}</p>
+                <div>
+                  <span className="deposit-tag">Deposit: ₹{prod.deposit}</span>
+                </div>
 
-              {/* Action Buttons */}
-              <div className="action-buttons">
-                <button
-                  className="rent-btn"
-                  onClick={() => {
-                    if (user) {
-                      navigate(`/rent/${prod._id}`);
-                    } else {
-                      navigate("/login");
-                    }
-                  }}
-                >
-                  Rent Now
-                </button>
+                <p className="desc-text">{prod.description}</p>
 
-                {(admin || (user && prod.userId?.toString() === user._id)) && (
-                  <>
-                    <button
-                      className={`availability-btn ${!prod.available ? "is-unavailable" : ""}`}
-                      onClick={() => handleToggleAvailability(prod._id)}
-                    >
-                      {prod.available ? "Make Unavailable" : "Make Available"}
-                    </button>
+                {/* Action Buttons */}
+                <div className="action-buttons">
+                  <button
+                    className="rent-btn"
+                    onClick={() => {
+                      if (user) {
+                        navigate(`/rent/${prod._id}`);
+                      } else {
+                        navigate("/login");
+                      }
+                    }}
+                  >
+                    Rent Now
+                  </button>
 
-                    <button
-                      className="delete-btn"
-                      onClick={() => handleDelete(prod._id)}
-                    >
-                      Delete
-                    </button>
-                  </>
-                )}
+                  {(admin || (user && prod.userId?.toString() === user._id)) && (
+                    <div className="admin-actions">
+                      <button
+                        className={`availability-btn ${!prod.available ? "is-unavailable" : ""}`}
+                        onClick={() => handleToggleAvailability(prod._id)}
+                      >
+                        {prod.available ? "Hide" : "Show"}
+                      </button>
+
+                      <button
+                        className="delete-btn"
+                        onClick={() => handleDelete(prod._id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           ))

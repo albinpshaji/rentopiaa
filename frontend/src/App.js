@@ -10,6 +10,7 @@ import Register from "./pages/Register";
 import ProductAdd from "./pages/ProductAdd";
 import ProductList from "./pages/ProductList";
 import RentProduct from "./pages/RentProduct";
+import Profile from "./pages/Profile";
 import Logout from "./pages/Logout";
 import "./App.css";
 
@@ -28,6 +29,14 @@ function App() {
           element={
             <ProtectedRoute>
               <ProductAdd />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
             </ProtectedRoute>
           }
         />

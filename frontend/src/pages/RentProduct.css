@@ -93,3 +93,79 @@
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
+
+/* Booking Section */
+.booking-section {
+  margin-top: 2rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 2rem;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+}
+
+.booking-section h3 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  color: var(--text-main);
+  border-bottom: 2px solid var(--bg-color);
+  padding-bottom: 1rem;
+}
+
+.booking-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group input[type="date"] {
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--bg-color);
+  font-family: inherit;
+  color: var(--text-main);
+}
+
+.booking-summary {
+  background: var(--bg-color);
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--border-focus);
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.8rem;
+  font-size: 1.05rem;
+  color: var(--text-muted);
+}
+
+.summary-row.total {
+  font-weight: 800;
+  color: var(--text-main);
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.deposit-note {
+  font-size: 0.85rem;
+  color: var(--primary);
+  font-weight: 600;
+}
