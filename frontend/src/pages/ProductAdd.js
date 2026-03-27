@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import API from "../api";
 import { useNavigate } from "react-router-dom";
 import "./ProductAdd.css";
 
@@ -13,7 +13,7 @@ const ProductAdd = () => {
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
   const [ownerNumber, setOwnerNumber] = useState("");
-  const [place, setPlace] = useState(""); // ✅ New field
+  const [place, setPlace] = useState("");
   const [error, setError] = useState(null);
 
   const user = JSON.parse(localStorage.getItem("user"));
@@ -46,12 +46,12 @@ const ProductAdd = () => {
     formData.append("deposit", deposit);
     formData.append("description", description);
     formData.append("ownerNumber", ownerNumber);
-    formData.append("place", place); // ✅ Add place
+    formData.append("place", place);
     formData.append("userId", user._id);
     if (image) formData.append("image", image);
 
     try {
-      await axios.post("http://localhost:5000/api/products", formData, {
+      await API.post("/api/products", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       alert("Product added successfully");

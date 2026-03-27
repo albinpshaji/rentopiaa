@@ -1,13 +1,14 @@
-const express = require("express");
-const bcrypt = require("bcryptjs");
-const router = express.Router();
-const Admin = require("../models/Admin");
+import express from "express";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import Admin from "../models/Admin.js";
 
-// Admin registration (optional, you can run once to create admin)
+const router = express.Router();
+
+// Admin registration
 router.post("/register", async (req, res) => {
   try {
     const { username, password } = req.body;
-
     if (!username || !password) {
       return res.status(400).json({ message: "Username and password required" });
     }
@@ -18,11 +19,11 @@ router.post("/register", async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-
     const admin = new Admin({ username, password: hashedPassword });
     await admin.save();
 
-    res.json({ message: "Admin registered successfully", admin });
+    const adminObj = { _id: admin._id, username: admin.username };
+    res.json({ message: "Admin registered successfully", admin: adminObj });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
   }
@@ -32,7 +33,6 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
-
     if (!username || !password) {
       return res.status(400).json({ message: "Username and password required" });
     }
@@ -43,10 +43,17 @@ router.post("/login", async (req, res) => {
     const isMatch = await bcrypt.compare(password, admin.password);
     if (!isMatch) return res.status(400).json({ message: "Invalid password" });
 
-    res.json({ message: "Admin login successful", admin });
+    const token = jwt.sign(
+      { id: admin._id, role: "admin" },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.TOKEN_EXPIRES_IN || "7d" }
+    );
+
+    const adminObj = { _id: admin._id, username: admin.username };
+    res.json({ message: "Admin login successful", admin: adminObj, token });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 });
 
-module.exports = router;
+export default router;

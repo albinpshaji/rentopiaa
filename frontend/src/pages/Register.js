@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import API from "../api";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -16,16 +16,14 @@ const Register = () => {
     }
 
     try {
-      const res = await axios.post("http://localhost:5000/api/users/register", {
+      const res = await API.post("/api/users/register", {
         name,
         email,
         password,
       });
 
       alert(res.data.message);
-      console.log("Registered User:", res.data.user);
-
-      window.location.href = "/login"; // redirect to login page
+      window.location.href = "/login";
     } catch (err) {
       alert(err.response?.data?.message || "Registration failed");
     }

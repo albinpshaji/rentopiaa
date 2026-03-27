@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import API from "../api";
 import "./ProductList.css";
 
 const ProductList = () => {
@@ -28,11 +28,7 @@ const ProductList = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const headers = {};
-        if (user) headers.user = JSON.stringify(user);
-        if (admin) headers.admin = JSON.stringify(admin);
-
-        const res = await axios.get("http://localhost:5000/api/products", { headers });
+        const res = await API.get("/api/products");
         setProducts(res.data);
         setFilteredProducts(res.data);
         setLoading(false);
@@ -71,11 +67,7 @@ const ProductList = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       try {
-        const headers = {};
-        if (user) headers.user = JSON.stringify(user);
-        if (admin) headers.admin = JSON.stringify(admin);
-
-        await axios.delete(`http://localhost:5000/api/products/${id}`, { headers });
+        await API.delete(`/api/products/${id}`);
         setProducts(products.filter((p) => p._id !== id));
       } catch (err) {
         console.error("Error deleting product:", err);
@@ -87,15 +79,7 @@ const ProductList = () => {
   // Toggle availability
   const handleToggleAvailability = async (id) => {
     try {
-      const headers = {};
-      if (user) headers.user = JSON.stringify(user);
-      if (admin) headers.admin = JSON.stringify(admin);
-
-      await axios.put(
-        `http://localhost:5000/api/products/${id}/toggle-availability`,
-        {},
-        { headers }
-      );
+      await API.put(`/api/products/${id}/toggle-availability`);
 
       setProducts(
         products.map((p) =>
@@ -141,7 +125,7 @@ const ProductList = () => {
           <option value="Sports">Sports</option>
           <option value="Gadgets">Gadgets</option>
           <option value="Furniture">Furniture</option>
-          <option value="Others">Others</option>
+          <option value="Other">Other</option>
         </select>
       </div>
 
@@ -152,64 +136,62 @@ const ProductList = () => {
         ) : (
           filteredProducts.map((prod) => (
             <div className="product-card" key={prod._id}>
-              {prod.image ? (
-                <img
-                  src={`http://localhost:5000/uploads/${prod.image}`}
-                  alt={prod.name}
-                  className="product-image"
-                />
-              ) : (
-                <div className="no-image">No Image</div>
-              )}
+              <div className="image-container">
+                {prod.image ? (
+                  <img
+                    src={`http://localhost:5000/uploads/${prod.image}`}
+                    alt={prod.name}
+                    className="product-image"
+                  />
+                ) : (
+                  <div className="no-image">No Image</div>
+                )}
+              </div>
+
+              <div className="detail-row">
+                <span className="badge">{prod.category}</span>
+                <span className="badge" style={{ background: "var(--surface-hover)", color: "var(--text-muted)", border: "none" }}>📍 {prod.place}</span>
+              </div>
 
               <h3>{prod.name}</h3>
-              <p><strong>Category:</strong> {prod.category}</p>
-              <p><strong>Price:</strong> ₹{prod.price}</p>
-              <p><strong>Deposit:</strong> ₹{prod.deposit}</p>
-              <p><strong>Place:</strong> {prod.place}</p>
-              <p><strong>Description:</strong> {prod.description}</p>
+              <div className="price-tag">₹{prod.price} <span style={{ fontSize: "1rem", color: "var(--text-muted)", fontWeight: "normal" }}>/ day</span></div>
+              <div className="deposit-tag">Deposit: ₹{prod.deposit}</div>
 
-              {/* Rent Button: redirect if not logged in */}
-              <button
-                className="rent-btn"
-                onClick={() => {
-                  if (user) {
-                    navigate(`/rent/${prod._id}`);
-                  } else {
-                    navigate("/login");
-                  }
-                }}
-              >
-                Rent Now
-              </button>
+              <p className="desc-text">{prod.description}</p>
 
-              {(admin || (user && prod.userId?.toString() === user._id)) && (
-                <>
-                  <button
-                    className="delete-btn"
-                    onClick={() => handleDelete(prod._id)}
-                    style={{
-                      marginTop: "10px",
-                      backgroundColor: "red",
-                      color: "white",
-                    }}
-                  >
-                    Delete
-                  </button>
+              {/* Action Buttons */}
+              <div className="action-buttons">
+                <button
+                  className="rent-btn"
+                  onClick={() => {
+                    if (user) {
+                      navigate(`/rent/${prod._id}`);
+                    } else {
+                      navigate("/login");
+                    }
+                  }}
+                >
+                  Rent Now
+                </button>
 
-                  <button
-                    className="availability-btn"
-                    onClick={() => handleToggleAvailability(prod._id)}
-                    style={{
-                      marginTop: "10px",
-                      backgroundColor: prod.available ? "orange" : "green",
-                      color: "white",
-                    }}
-                  >
-                    {prod.available ? "Make Unavailable" : "Make Available"}
-                  </button>
-                </>
-              )}
+                {(admin || (user && prod.userId?.toString() === user._id)) && (
+                  <>
+                    <button
+                      className={`availability-btn ${!prod.available ? "is-unavailable" : ""}`}
+                      onClick={() => handleToggleAvailability(prod._id)}
+                    >
+                      {prod.available ? "Make Unavailable" : "Make Available"}
+                    </button>
+
+                    <button
+                      className="delete-btn"
+                      onClick={() => handleDelete(prod._id)}
+                    >
+                      Delete
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
           ))
         )}

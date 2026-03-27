@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import API from "../api";
 
 const AdminRegister = () => {
   const [username, setUsername] = useState("");
@@ -14,16 +14,9 @@ const AdminRegister = () => {
     }
 
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/admin/register",
-        { username, password },
-        { headers: { "Content-Type": "application/json" } } // ensures JSON body
-      );
+      const res = await API.post("/api/admin/register", { username, password });
 
       alert(res.data.message);
-      console.log("Admin registered:", res.data.admin);
-
-      // Optionally, redirect to admin login
       window.location.href = "/admin";
     } catch (err) {
       alert(err.response?.data?.message || "Admin registration failed");

@@ -1,24 +1,95 @@
-.container {
-  max-width: 600px;
-  margin: 40px auto;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  background-color: #f9f9f9;
+/* RentProduct.css */
+
+.rent-product-container {
+  max-width: 800px;
+  margin: 4rem auto;
+  background: var(--surface);
+  padding: 3rem;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.rent-product-container h2 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
   text-align: center;
-  font-family: Arial, sans-serif;
 }
 
-h2 {
-  color: #333;
-  margin-bottom: 20px;
+.rent-product-image {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
 }
 
-p {
-  font-size: 18px;
-  margin: 10px 0;
+.rent-details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  background: var(--bg-color);
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
 }
 
-strong {
-  color: #555;
+.rent-details-grid p {
+  font-size: 1.05rem;
+  color: var(--text-main);
+}
+
+.rent-details-grid strong {
+  color: var(--text-muted);
+  display: block;
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
+  letter-spacing: 0.02em;
+}
+
+.rent-description {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--text-muted);
+  padding: 1rem 0;
+}
+
+.rent-contact {
+  text-align: center;
+  background: rgba(16, 185, 129, 0.05);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  margin-top: 1rem;
+}
+
+.rent-contact p {
+  font-size: 1.1rem;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+}
+
+.rent-contact a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--primary);
+  background: white;
+  padding: 0.8rem 1.5rem;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  margin-top: 1rem;
+}
+
+.rent-contact a:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }

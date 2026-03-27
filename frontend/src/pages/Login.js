@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import API from "../api";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -11,16 +11,13 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:5000/api/users/login", {
-        email,
-        password,
-      });
+      const res = await API.post("/api/users/login", { email, password });
 
       alert(res.data.message);
-      console.log("User Data:", res.data.user);
 
-      // Store logged-in user info in localStorage
+      // Store logged-in user info and token in localStorage
       localStorage.setItem("user", JSON.stringify(res.data.user));
+      localStorage.setItem("token", res.data.token);
 
       // Trigger a custom storage event to notify Navbar
       window.dispatchEvent(new Event("storage"));
@@ -57,7 +54,7 @@ const Login = () => {
         </button>
       </form>
       <div className="footer">
-        Don’t have an account? <a href="/register">Register here</a>
+        Don't have an account? <a href="/register">Register here</a>
       </div>
     </div>
   );

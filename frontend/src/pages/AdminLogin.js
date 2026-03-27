@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import API from "../api";
 import { useNavigate } from "react-router-dom";
 
 const AdminLogin = () => {
@@ -11,21 +11,18 @@ const AdminLogin = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:5000/api/admin/login", {
-        username,
-        password,
-      });
+      const res = await API.post("/api/admin/login", { username, password });
 
       alert(res.data.message);
-      console.log("Admin Data:", res.data.admin);
 
-      // Store logged-in admin info
+      // Store logged-in admin info and token
       localStorage.setItem("admin", JSON.stringify(res.data.admin));
+      localStorage.setItem("token", res.data.token);
 
-      // Optional: trigger storage event if Navbar depends on it
+      // Trigger storage event so Navbar updates
       window.dispatchEvent(new Event("storage"));
 
-      // Redirect to product page or admin dashboard
+      // Redirect to product page
       navigate("/products");
     } catch (err) {
       alert(err.response?.data?.message || "Admin login failed");
