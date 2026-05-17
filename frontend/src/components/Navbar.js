@@ -1,8 +1,9 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [user, setUser] = useState(null);
   const [admin, setAdmin] = useState(null);
 
@@ -35,16 +36,16 @@ const Navbar = () => {
       <div className="logo">RENTOPIAA</div>
       <ul>
         <li>
-          <Link to="/">Home</Link>
+          <Link to="/" style={{ color: location.pathname === "/" ? "var(--primary)" : "var(--text-muted)", fontWeight: location.pathname === "/" ? 600 : 500 }}>Home</Link>
         </li>
         <li>
-          <Link to="/products">Browse Products</Link>
+          <Link to="/products" style={{ color: location.pathname === "/products" ? "var(--primary)" : "var(--text-muted)", fontWeight: location.pathname === "/products" ? 600 : 500 }}>Browse Products</Link>
         </li>
 
         {/* Add Product visible only if user is logged in */}
         {user && (
           <li>
-            <Link to="/add-product">Add Product</Link>
+            <Link to="/add-product" style={{ color: location.pathname === "/add-product" ? "var(--primary)" : "var(--text-muted)", fontWeight: location.pathname === "/add-product" ? 600 : 500 }}>Add Product</Link>
           </li>
         )}
 
@@ -53,7 +54,7 @@ const Navbar = () => {
           <>
             <li style={{ color: "#ffd166", fontWeight: 600 }}>
               {user ? (
-                <Link to="/profile" style={{ color: "var(--primary)" }}>Dashboard ({user.name})</Link>
+                <Link to="/profile" style={{ color: location.pathname === "/profile" ? "var(--primary)" : "var(--text-muted)", fontWeight: location.pathname === "/profile" ? 600 : 500 }}>Dashboard ({user.name})</Link>
               ) : (
                 `Admin: ${admin.username}`
               )}
