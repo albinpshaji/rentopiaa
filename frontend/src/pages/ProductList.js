@@ -103,33 +103,46 @@ const ProductList = () => {
         <p>Find what you need or list what you have.</p>
       </div>
 
-      {/* Filter controls */}
-      <div className="filters">
-        <input
-          type="text"
-          placeholder="Search items by name..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+      {/* Unified Search Bar */}
+      <div className="search-bar-unified">
+        <div className="search-field">
+          <span className="search-icon">🔍</span>
+          <input
+            type="text"
+            placeholder="What are you looking for?"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+        
+        <div className="search-divider"></div>
+        
+        <div className="search-field">
+          <span className="search-icon">📍</span>
+          <input
+            type="text"
+            placeholder="Where?"
+            value={placeSearch}
+            onChange={(e) => setPlaceSearch(e.target.value)}
+          />
+        </div>
 
-        <input
-          type="text"
-          placeholder="Filter by location..."
-          value={placeSearch}
-          onChange={(e) => setPlaceSearch(e.target.value)}
-        />
-
-        <select
-          value={categoryFilter}
-          onChange={(e) => setCategoryFilter(e.target.value)}
-        >
-          <option value="All">All Categories</option>
-          <option value="Electronics">Electronics</option>
-          <option value="Sports">Sports</option>
-          <option value="Gadgets">Gadgets</option>
-          <option value="Furniture">Furniture</option>
-          <option value="Other">Other</option>
-        </select>
+        <div className="search-divider"></div>
+        
+        <div className="search-field">
+          <span className="search-icon">🏷️</span>
+          <select
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
+          >
+            <option value="All">All Categories</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Sports">Sports</option>
+            <option value="Gadgets">Gadgets</option>
+            <option value="Furniture">Furniture</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
       </div>
 
       {/* Product Grid */}
@@ -179,18 +192,24 @@ const ProductList = () => {
 
                 {/* Action Buttons */}
                 <div className="action-buttons">
-                  <button
-                    className="rent-btn"
-                    onClick={() => {
-                      if (user) {
-                        navigate(`/rent/${prod._id}`);
-                      } else {
-                        navigate("/login");
-                      }
-                    }}
-                  >
-                    Rent Now
-                  </button>
+                  {!(user && prod.userId?.toString() === user._id) ? (
+                    <button
+                      className="rent-btn"
+                      onClick={() => {
+                        if (user) {
+                          navigate(`/rent/${prod._id}`);
+                        } else {
+                          navigate("/login");
+                        }
+                      }}
+                    >
+                      Rent Now
+                    </button>
+                  ) : (
+                    <div style={{ color: "var(--primary)", fontWeight: "bold", alignSelf: "center", marginRight: "auto" }}>
+                      Your Item
+                    </div>
+                  )}
 
                   {(admin || (user && prod.userId?.toString() === user._id)) && (
                     <div className="admin-actions">
