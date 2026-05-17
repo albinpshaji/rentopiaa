@@ -3,6 +3,7 @@ import multer from "multer";
 import path from "path";
 import { fileURLToPath } from "url";
 import Product from "../models/Product.js";
+import Rental from "../models/Rental.js";
 import { optionalAuth } from "../middleware/auth.js";
 
 const router = express.Router();
@@ -79,6 +80,17 @@ router.delete("/:id", optionalAuth, async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
     if (!product) return res.status(404).json({ message: "Product not found" });
+
+    // Bug 5 Fix: Block deletion if product has active rentals
+    const activeRentals = await Rental.findOne({
+      product: product._id,
+      status: { $in: ["pending", "accepted"] },
+    });
+    if (activeRentals) {
+      return res.status(400).json({
+        message: "Cannot delete this product — it has active or pending rental requests. Complete or reject them first.",
+      });
+    }
 
     if (req.admin) {
       await product.deleteOne();
