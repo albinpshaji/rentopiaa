@@ -81,6 +81,8 @@ const RentProduct = () => {
 
   // Get today's date in YYYY-MM-DD format for min attributes
   const today = new Date().toISOString().split("T")[0];
+  const loggedInUser = JSON.parse(localStorage.getItem("user") || "null");
+  const isOwner = loggedInUser && product.userId === loggedInUser._id;
 
   return (
     <div className="rent-product-container">
@@ -104,60 +106,67 @@ const RentProduct = () => {
       <p className="rent-description">{product.description}</p>
 
       {/* Booking Form */}
-      <div className="booking-section">
-        <h3>Request to Rent</h3>
-        <form onSubmit={handleBook} className="booking-form">
-          <div className="form-row">
-            <div className="form-group">
-              <label>Start Date</label>
-              <input
-                type="date"
-                min={today}
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                required
-              />
+      {isOwner ? (
+        <div className="booking-section" style={{ textAlign: "center", padding: "2rem" }}>
+          <h3 style={{ color: "var(--primary)" }}>This is your product!</h3>
+          <p style={{ color: "var(--text-muted)" }}>You cannot request to rent your own item.</p>
+        </div>
+      ) : (
+        <div className="booking-section">
+          <h3>Request to Rent</h3>
+          <form onSubmit={handleBook} className="booking-form">
+            <div className="form-row">
+              <div className="form-group">
+                <label>Start Date</label>
+                <input
+                  type="date"
+                  min={today}
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>End Date</label>
+                <input
+                  type="date"
+                  min={startDate || today}
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  required
+                />
+              </div>
             </div>
-            <div className="form-group">
-              <label>End Date</label>
-              <input
-                type="date"
-                min={startDate || today}
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                required
-              />
-            </div>
-          </div>
 
-          <div className="booking-summary">
-            <div className="summary-row">
-              <span>Duration:</span>
-              <span>{totalDays} {totalDays === 1 ? 'day' : 'days'}</span>
+            <div className="booking-summary">
+              <div className="summary-row">
+                <span>Duration:</span>
+                <span>{totalDays} {totalDays === 1 ? 'day' : 'days'}</span>
+              </div>
+              <div className="summary-row">
+                <span>Rate:</span>
+                <span>₹{product.price} / day</span>
+              </div>
+              <div className="summary-row total">
+                <span>Total Rental Price:</span>
+                <span>₹{totalPrice}</span>
+              </div>
+              <p className="deposit-note">
+                Note: A ₹{product.deposit} deposit must be paid upon pickup.
+              </p>
             </div>
-            <div className="summary-row">
-              <span>Rate:</span>
-              <span>₹{product.price} / day</span>
-            </div>
-            <div className="summary-row total">
-              <span>Total Rental Price:</span>
-              <span>₹{totalPrice}</span>
-            </div>
-            <p className="deposit-note">
-              Note: A ₹{product.deposit} deposit must be paid upon pickup.
-            </p>
-          </div>
 
-          <button
-            type="submit"
-            className="btn-primary"
-            style={{ width: "100%", padding: "1rem", fontSize: "1.1rem" }}
-            disabled={loading || totalDays <= 0 || !product.available}
-          >
-            {loading ? "Sending Request..." : !product.available ? "Currently Unavailable" : "Send Rental Request"}
-          </button>
-        </form>
-      </div>
+            <button
+              type="submit"
+              className="btn-primary"
+              style={{ width: "100%", padding: "1rem", fontSize: "1.1rem" }}
+              disabled={loading || totalDays <= 0 || !product.available}
+            >
+              {loading ? "Sending Request..." : !product.available ? "Currently Unavailable" : "Send Rental Request"}
+            </button>
+          </form>
+        </div>
+      )}
 
       {/* Reviews Section */}
       <div className="reviews-section" style={{ marginTop: "3rem" }}>
