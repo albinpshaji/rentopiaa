@@ -27,6 +27,23 @@ const __dirname = path.dirname(__filename);
 // Connect to MongoDB
 connectDB();
 
+import Admin from "./models/Admin.js";
+import bcrypt from "bcryptjs";
+
+const seedAdmin = async () => {
+    try {
+        const adminExists = await Admin.findOne({ username: "admin" });
+        if (!adminExists) {
+            const hashedPassword = await bcrypt.hash("admin", 10);
+            await Admin.create({ username: "admin", password: hashedPassword });
+            console.log("✅ Default admin created: admin / admin");
+        }
+    } catch (error) {
+        console.error("Error seeding admin:", error);
+    }
+};
+seedAdmin();
+
 // Initialize Express
 const app = express();
 
@@ -34,7 +51,7 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
     cors: {
-        origin: "http://localhost:3000",
+        origin: process.env.FRONTEND_URL || "http://localhost:3000",
         methods: ["GET", "POST"],
     },
 });
@@ -60,7 +77,7 @@ io.on("connection", (socket) => {
 });
 
 // Middleware
-app.use(cors());
+app.use(cors({ origin: process.env.FRONTEND_URL || "http://localhost:3000" }));
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 

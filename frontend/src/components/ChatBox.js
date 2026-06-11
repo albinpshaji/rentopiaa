@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import { io } from "socket.io-client";
 import API from "../api";
+import { API_URL } from "../config";
 import "./ChatBox.css";
 
-const SOCKET_URL = "http://localhost:5000";
+const SOCKET_URL = API_URL;
 
 const ChatBox = ({ rentalId, onClose }) => {
     const [messages, setMessages] = useState([]);

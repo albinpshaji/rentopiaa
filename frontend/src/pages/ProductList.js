@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api";
+import { API_URL } from "../config";
 import "./ProductList.css";
 
 const ProductList = () => {
@@ -160,7 +161,7 @@ const ProductList = () => {
                 <span className="place-badge">📍 {prod.place}</span>
                 {prod.image ? (
                   <img
-                    src={`http://localhost:5000/uploads/${prod.image}`}
+                    src={`${API_URL}/uploads/${prod.image}`}
                     alt={prod.name}
                     className="product-image"
                   />

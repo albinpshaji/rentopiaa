@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import API from "../api";
 import { useNavigate } from "react-router-dom";
 import ChatBox from "../components/ChatBox";
+import { API_URL } from "../config";
 import "./Profile.css";
 
 const Profile = () => {
@@ -188,7 +189,7 @@ const Profile = () => {
                     {products.map((prod) => (
                         <div className="listing-card" key={prod._id}>
                             {prod.image ? (
-                                <img src={`http://localhost:5000/uploads/${prod.image}`} alt={prod.name} />
+                                <img src={`${API_URL}/uploads/${prod.image}`} alt={prod.name} />
                             ) : (
                                 <div className="listing-no-image">No Image</div>
                             )}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import API from "../api";
+import { API_URL } from "../config";
 import "./RentProduct.css";
 
 const RentProduct = () => {
@@ -90,7 +91,7 @@ const RentProduct = () => {
 
       {product.image && (
         <img
-          src={`http://localhost:5000/uploads/${product.image}`}
+          src={`${API_URL}/uploads/${product.image}`}
           alt={product.name}
           className="rent-product-image"
         />
